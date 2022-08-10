@@ -1,7 +1,15 @@
 
 import math
+class PARAMS:
+    prev_speed = None
+    prev_abs_steering = None
+    prev_steps = None
+
 
 def reward_function(params):
+    ...
+    PARAMS.prev_speed = params['speed']
+
 
     #
     #Distance from center
@@ -35,12 +43,8 @@ def reward_function(params):
     waypoints = params['waypoints']
     closest_waypoints=params['closest_waypoints']
     heading = params['heading']
-    if(closest_waypoints[1]+1):
-        next_point = waypoints[closest_waypoints[1]+1]
-        prev_point = waypoints[closest_waypoints[0]-1]
-    else:
-        next_point = waypoints[closest_waypoints[1]]
-        prev_point = waypoints[closest_waypoints[0]]
+    next_point = waypoints[closest_waypoints[1]]
+    prev_point = waypoints[closest_waypoints[0]]
 
     track_direction = math.atan2(next_point[1] - prev_point[1], next_point[0]- prev_point[0])
 
@@ -86,14 +90,12 @@ def reward_function(params):
     #
     #speed
     #
-    reward_speed=1
+    reward_speed=0.6
 
-    speed=params['speed']
+    if direction_diff_abs<0.5 and params['speed']>PARAMS.prev_speed*1.2:
+        reward_speed=1
 
-    if direction_diff_abs<0.5:
-        speed=speed*1.3
-
-    reward= reward_dist_cent + reward_direc + reward_str_a + reward_zig_zag 
+    reward= 0.8*reward_dist_cent + reward_direc + reward_str_a + 0.5*reward_zig_zag + reward_speed
     #
     #Crash  , reverse , off-track
     #
