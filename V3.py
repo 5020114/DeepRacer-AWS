@@ -1,6 +1,8 @@
+
 import math
 
 def reward_function(params):
+
     #
     #Distance from center
     #
@@ -21,7 +23,7 @@ def reward_function(params):
     elif distance_from_center<=marker_4:
         reward_dist_cent = 0.5
     elif distance_from_center<=marker_5:
-        reward_dist_cent = 0.2
+        reward_dist_cent = 0.25
     else:
         reward_dist_cent=1e-3
 
@@ -33,9 +35,12 @@ def reward_function(params):
     waypoints = params['waypoints']
     closest_waypoints=params['closest_waypoints']
     heading = params['heading']
-
-    next_point = waypoints[closest_waypoints[1]]
-    prev_point = waypoints[closest_waypoints[0]]
+    if(closest_waypoints[1]+1):
+        next_point = waypoints[closest_waypoints[1]+1]
+        prev_point = waypoints[closest_waypoints[0]-1]
+    else:
+        next_point = waypoints[closest_waypoints[1]]
+        prev_point = waypoints[closest_waypoints[0]]
 
     track_direction = math.atan2(next_point[1] - prev_point[1], next_point[0]- prev_point[0])
 
@@ -53,9 +58,42 @@ def reward_function(params):
     elif direction_diff_abs > DIRECTION_THRESHOLD:
         reward_direc = 0.6
     
-    reward= reward_dist_cent + reward_direc
 
+    #
+    # steering_angle
+    #
+    reward_str_a=1
 
+    steering_angle=params['steering_angle']
+
+    direction_diff=track_direction - heading
+
+    if steering_angle == direction_diff:
+        reward_str_a = 1
+    elif steering_angle >= direction_diff*1.5:
+        reward_str_a = 0.7
+    elif steering_angle <= direction_diff*0.5:
+        reward_str_a = 0.7
+    else:
+        reward_str_a = 1e-3
+
+    #preventing zig-zag
+    reward_zig_zag=1
+
+    if abs(steering_angle)>15:
+        reward_zig_zag = 0.8
+
+    #
+    #speed
+    #
+    reward_speed=1
+
+    speed=params['speed']
+
+    if direction_diff_abs<0.5:
+        speed=speed*1.3
+
+    reward= reward_dist_cent + reward_direc + reward_str_a + reward_zig_zag 
     #
     #Crash  , reverse , off-track
     #
@@ -68,3 +106,4 @@ def reward_function(params):
         reward=1e-3
     
     return float(reward)
+
