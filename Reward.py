@@ -1,5 +1,5 @@
 import math
-def_rewardfunction(params):
+def reward_function(params):
     #
     #Distance from center
     #
@@ -148,6 +148,6 @@ def_rewardfunction(params):
         reward=1e-3
     
 
-return float(reward)
+    return float(reward)
 
 
