@@ -1,25 +1,17 @@
 
 import math
-class Reward(params):
-
-    def __init__(self, verbose=False, track_time=False,params):
+class Reward:
+    def __init__(self, verbose=False, track_time=False):
         self.prev_speed = 0
-        self.params=params
-
     def reward_function(self, params):
-        # if ((direction_diff_abs<0.5) and self.params['speed'] > self.prev_speed ):
-        #     return 1
-        # elif((direction_diff_abs>1.5) and self.params['speed'] < self.prev_speed):
-        #     return 1
-        # else:
-        #     reward_speed=0.5
-        # # Give a reward if our current speed is faster than our previous speed.
-        if self.params['speed'] >= self.prev_speed:
+        # Give a reward if our current speed is faster than our previous speed.
+        if params['speed'] >= self.prev_speed:
             return 1.0
+        
         return 0.0
 
-reward_object = Reward(params)
-
+reward_object = Reward()
+    
 def reward_function(params):
 
     #
