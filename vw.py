@@ -18,7 +18,6 @@ def reward_function(params):
     #
     #Distance from center
     #
-    reward_dist_cent=1.0
 
     track_width=params['track_width']
     distance_from_center=params['distance_from_center']
@@ -47,10 +46,13 @@ def reward_function(params):
     waypoints = params['waypoints']
     closest_waypoints=params['closest_waypoints']
     heading = params['heading']
-    next_point = waypoints[closest_waypoints[1]]
-    prev_point = waypoints[closest_waypoints[0]]
+    length=len(waypoints)
+    temp1=closest_waypoints[1]
+    temp2=closest_waypoints[0]
+    two_points_ahead = waypoints[(temp1+2)%length]
+    two_points_prev = waypoints[(temp2-2)%length]
 
-    track_direction = math.atan2(next_point[1] - prev_point[1], next_point[0]- prev_point[0])
+    track_direction = math.atan2(two_points_ahead[1] - two_points_prev[1], two_points_ahead[0]- two_points_prev[0])
 
     track_direction=math.degrees(track_direction)
 
@@ -59,11 +61,11 @@ def reward_function(params):
     if direction_diff_abs >180 :
         direction_diff_abs=360-180
     
-    DIRECTION_THRESHOLD=10.0
+    DIRECTION_THRESHOLD=8.0
 
     if direction_diff_abs < DIRECTION_THRESHOLD:
         reward_direc = 0.9
-    elif direction_diff_abs > DIRECTION_THRESHOLD:
+    elif direction_diff_abs >= DIRECTION_THRESHOLD:
         reward_direc = 0.6
     
 
@@ -94,10 +96,27 @@ def reward_function(params):
     #
     #speed
     #
-    reward_speed=reward_object.reward_function(params, direction_diff_abs)
+    # reward_speed=reward_object.reward_function(params, direction_diff_abs)
 
 
-    reward= 0.8*reward_dist_cent + reward_direc + reward_str_a + reward_zig_zag + reward_speed
+
+
+    reward= 0.8*reward_dist_cent + reward_direc + reward_str_a + reward_zig_zag 
+
+    # reward for the car taking fast actions (speed is in m/s)
+    speed=params['speed']
+    reward *= math.sin(speed/math.pi * 5/6)
+    
+    # same reward for going slow with greater steering angle then going fast straight ahead 
+    reward *= math.sin(0.4949 * (0.475 * (speed - 1.5241) + 0.5111 * steering_angle ** 2))
+
+    #
+    # progress
+    #
+    progress=params['progress']
+    if progress==100:
+        reward +=100
+
     #
     #Crash  , reverse , off-track
     #
