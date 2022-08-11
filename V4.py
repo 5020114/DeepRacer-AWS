@@ -30,16 +30,16 @@ def reward_function(params):
     distance_from_center=params['distance_from_center']
 
     marker_1=0.125*track_width
-    marker_2=0.250*track_width
-    marker_4=0.375*track_width 
+    # marker_2=0.250*track_width
+    # marker_4=0.375*track_width 
     marker_5=0.5*track_width
 
     if distance_from_center<=marker_1:
         reward_dist_cent = 1
-    elif distance_from_center<=marker_2:
-        reward_dist_cent = 0.75
-    elif distance_from_center<=marker_4:
-        reward_dist_cent = 0.5
+    # elif distance_from_center<=marker_2:
+    #     reward_dist_cent = 0.75
+    # elif distance_from_center<=marker_4:
+    #     reward_dist_cent = 0.5
     elif distance_from_center<=marker_5:
         reward_dist_cent = 0.25
     else:
