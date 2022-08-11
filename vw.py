@@ -2,12 +2,12 @@
 import math
 class Reward:
     def __init__(self, verbose=False, track_time=False):
-        self.prev_speed = 0
+        self.prev_speed = 4
     def reward_function(self, params, direction_diff_abs):
         # Give a reward if our current speed is faster than our previous speed.
-        if (direction_diff_abs < 4) and (params['speed'] >= self.prev_speed):
+        if (direction_diff_abs < 3) and (params['speed'] >= self.prev_speed):
             return 1.0
-        elif (direction_diff_abs > 4) and (params['speed'] < self.prev_speed):
+        elif (direction_diff_abs > 3) and (params['speed'] < self.prev_speed-3):
             return 1.0
         return 0.0
 
@@ -110,5 +110,4 @@ def reward_function(params):
         reward=1e-3
     
     return float(reward)
-
 
