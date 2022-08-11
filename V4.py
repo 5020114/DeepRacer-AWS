@@ -6,7 +6,7 @@ class Reward:
         self.prev_speed = 0
 
     def reward_function(self, params,direction_diff_abs):
-        if ((direction_diff_abs<0.5) and self.params['speed'] >= self.prev_speed ):
+        if ((direction_diff_abs<0.5) and self.params['speed'] > self.prev_speed ):
             return 1
         elif((direction_diff_abs>1.5) and self.params['speed'] < self.prev_speed):
             return 1
