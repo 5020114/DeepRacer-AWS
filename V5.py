@@ -96,12 +96,12 @@ def reward_function(params):
     #
     #speed
     #
-    # reward_speed=reward_object.reward_function(params, direction_diff_abs)
+    reward_speed=reward_object.reward_function(params, direction_diff_abs)
 
 
 
 
-    reward= 0.8*reward_dist_cent + reward_direc + reward_str_a + reward_zig_zag 
+    reward= 0.8*reward_dist_cent + reward_direc + reward_str_a + reward_zig_zag +reward_speed
 
     # reward for the car taking fast actions (speed is in m/s)
     speed=params['speed']
